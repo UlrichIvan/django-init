@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "app.models",
+    "product",
     "django.contrib.postgres",
 ]
 
@@ -100,3 +100,5 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+SECRET_KEY = "django-insecure-=nz0_=0wixn+s#ttrc8zgn0q)e_y-rmhq-*(f#@ca9lc4hrnih"
