@@ -1,31 +1,28 @@
-from django.http import HttpResponse
-from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-from .models import Product
-from drf_yasg.utils import swagger_auto_schema
-
-# Create your views here.
-from .serializer import ProductSerializer
-from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view
+from .serializers import ProductSerializer
 
 
-@require_http_methods(["GET"])
-def index(request) -> HttpResponse:
-    return HttpResponse("Hello world!")
+@api_view(["GET"])
+def index(_) -> Response:
+    return Response("Hello world!")
 
 
-# @csrf_exempt
-# @require_http_methods(["POST"])
-# class Create(APIView):
-#     @swagger_auto_schema(request_body=ProductSerializer)
-#     def post(self, request):
-#         try:
-#             body = ProductSerializer(data=request.body)
-#             if body.is_valid():
-#                 p = Product(request.body)
-#                 p.save()
-#                 return HttpResponse("product save successfully!")
-#             else:
-#                 return HttpResponse("invald product data")
-#         except BaseException as e:
-#             raise e
+@csrf_exempt
+@api_view(["POST"])
+def create(request):
+    Done = False
+    try:
+        serializer: ProductSerializer = ProductSerializer(data=request.data)
+        Done = True if serializer.is_valid() else False
+        if Done:
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        else:
+            return Response("invalide data", status=status.HTTP_401_UNAUTHORIZED)
+    except:
+        return Response(
+            [request.data, Done],
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
